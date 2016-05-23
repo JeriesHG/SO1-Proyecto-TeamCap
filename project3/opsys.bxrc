@@ -77,7 +77,7 @@ display_library: sdl
 # Bochs. Now the start address can be calculated from image size.
 #=======================================================================
 romimage: file=$BXSHARE/BIOS-bochs-latest 
-#romimage: file =/home/so1/Desktop/Comp354Projects/bochs-2.4.2/bios/BIOS-bochs-latest
+#romimage: file=mybios.bin, address=0xfff80000 # 512k at memory top
 
 #=======================================================================
 # CPU:
@@ -165,8 +165,6 @@ megs: 32
 #vgaromimage: file=bios/VGABIOS-elpin-2.40
 vgaromimage: file=$BXSHARE/VGABIOS-lgpl-latest
 #vgaromimage: file=bios/VGABIOS-lgpl-latest-cirrus
-
-#vgaromimage: file=/home/so1/Desktop/TeamCap/bochs-2.4.2/bios/VGABIOS-elpin-2.40
 
 #=======================================================================
 # VGA:
