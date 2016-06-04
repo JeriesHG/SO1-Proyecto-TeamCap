@@ -62,6 +62,7 @@ void parseBuffer(char buffer[]){
 		}else if(checkCommand("delete",buffer, index)){
 			index = 6;
 			if(buffer[index] == ' '){
+				retrieveParameter(buffer, parameterName,index,6);
 				if(fileExists(parameterName, fileBuffer)){
 					interrupt(0x21, 0x07, parameterName,0, 0);
 					printScreen("\r\nShell>File Deleted...\0");
