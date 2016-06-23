@@ -1,24 +1,23 @@
 #include "userlib.h"
 #include "proc.h"
 
-int kill(char *index){
-	int selectedSegment = atoi(index);
+int kill(int segment){
 	int found;
 	int i;
 
 	setKernelDataSegment();
 	for(i=0; i<8; i++) {
-		
 		if(pcbPool[i].name[0] != 0x00 ){
-			if(selectedSegment == ((pcbPool[i].segment/0x2000) - 1)){
+			if(pcbPool[i].segment == ((segment + 2)*0x1000)){
 				found =1;
-				releasePCB(running);
-				releaseMemorySegment((*running).segment);
+				releaseMemorySegment(segment);
+				releasePCB(&pcbPool[i]);
+				restoreDataSegment();
 				break;
 			}
 		}
 	}
-	restoreDataSegment();
+	
 
 	setKernelDataSegment();
 	if(found == 1){
@@ -42,7 +41,7 @@ void showProcesses(){
 			print(pcbPool[i].name);
 			print("\t-");
 			print(" Segment: ");
-			printInt((pcbPool[i].segment/0x2000) - 1 );
+			printInt((pcbPool[i].segment)/(0x1000) - 2);
 		}
 	}
 	restoreDataSegment();

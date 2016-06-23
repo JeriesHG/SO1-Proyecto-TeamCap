@@ -105,7 +105,7 @@ int handleInterrupt21(int ax, int bx, int cx, int dx){
 		showProcesses();
 		return 1;
 	}else if(ax == 0x0B){
-		return kill(bx);
+		return kill(atoi(bx));
 	}else{
 		print("Quit Interrupting\0");
 		return -1;
@@ -113,7 +113,7 @@ int handleInterrupt21(int ax, int bx, int cx, int dx){
 }
 
 void terminate(){
-	resetSegments();
+	// resetSegments();
 	setKernelDataSegment();
 	releasePCB(running);
 	restoreDataSegment();
@@ -126,22 +126,23 @@ void terminate(){
 int executeProgram(char* name){
 	char buffer[13312];
 	int i;
+	int freeSegment;
 	int segment;
 	struct PCB *pcb;
 
 	setKernelDataSegment();
-	segment = getFreeMemorySegment();
+	freeSegment = getFreeMemorySegment();
 	restoreDataSegment();
 
-	if(segment == -1){
+	if(freeSegment == -1){
 		print("No Memory Available\0");
 		return -2;
 	}
 
-	if(segment == 0x0000 || segment == 0x1000){
-		print("Invalid Segment\0");
-		return -1; 
-	}
+	// if(freeSegment == 0x0000 || freeSegment == 0x1000){
+	// 	print("Invalid Segment\0");
+	// 	return -1; 
+	// }
 
 	interrupt(0x21, 0x03, name, buffer, 0);
 
@@ -149,6 +150,8 @@ int executeProgram(char* name){
 		print("File not found\0");
 		return -1;
 	}
+
+	segment = 0x1000*(freeSegment+2);
 
 	for(i = 0;i<13312;i++){
 		putInMemory(segment, i, buffer[i]);
@@ -162,7 +165,7 @@ int executeProgram(char* name){
 		return -2;
 	}
 
-	kStrCopy(name,(*pcb).name, 5);
+	kStrCopy(name,(*pcb).name, 6);
 
 	setKernelDataSegment();
 	(*pcb).segment = segment;

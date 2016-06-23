@@ -55,7 +55,7 @@
  	for (i=0; i<8; i++) {
  		if (memoryMap[i] == FREE) {
 			memoryMap[i] = USED;	// mark it as used.
-			return 0x2000+(4096*i);
+			return i;
 		}
 	}
 	return NO_FREE_SEGMENTS;		// No more segments left!
